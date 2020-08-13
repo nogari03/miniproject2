@@ -1,0 +1,49 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+   <title></title>
+</head>
+
+<body>
+
+   <script>
+      function make(tagname, attributes, children) { 
+      let newTag = document.createElement(tagname); // (첫 번쨰 인자)요소노드는 필수값이므로 맨 위에 빼서 요소노드 생성.
+
+         for (var i in attributes) { // 속성인자가 여러 개인 경우 key를 i로 기준하여 값을 분리. 
+            newTag.setAttribute(i, attributes[i]); //i는 속성노드 종류, attrybutes[i]에는 속성노드의 내용이 들어가서 속성노드 생성.
+            console.log("key :" + i + ", value :" + attributes[i]); //잘 분리 되었나 콘솔 확인용
+         }
+         if (typeof children == "object") { // children이 object인지 확인 (스트링값이면 빠져나감)
+            if (Array.isArray(children)) { // children이 Array인 object 일 때 상속하는 과정.
+               for (let i in children) { // Array인 children 인덱스별로 분리.
+                  let child = children[i]; // 분리 된 컨테이너 -> child가 됨
+                  newTag.appendChild(child); //분리된 child를 상속시킴
+               }
+            }
+            else { // children이 object 이지만 Array는 아닐 때 요소노드에 상속 //이 부분을 분리해 주지 않으면 "tr"이 한번 더 처리됨.
+               newTag.append(children);
+            }
+         }else { // children이 스트링값일 때 요소노드에 상속 
+               newTag.append(children);
+            }
+         return newTag; //완성된 노드를 출력.
+      }
+
+      var body = document.getElementsByTagName('body')[0];
+
+      var div = make("div", { 'style': 'background-color:red;', 'id': 'div1' }, "Hello world");
+      body.appendChild(div);
+
+      var tds = [make("td", {}, "Name"), make("td", {}, "Type"), make("td", {}, "Value")];
+      var tr = make("tr", {}, tds);
+
+      var table = make("table", { 'style': 'border: 1px solid red;' }, tr);
+      body.appendChild(table);
+
+   </script>
+</body>
+
+</html>
